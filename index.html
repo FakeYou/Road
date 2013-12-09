@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Road</title>
+
+    <script src="lib/lodash.js"></script>
+    <script src="lib/three/three.min.js"></script>
+    <script src="lib/three/controls/OrbitControls.js"></script>
+    <script src="lib/three/loaders/OBJLoader.js"></script>
+
+    <script src="road/Road.js"></script>
+    <script src="road/Base.js"></script>
+    <script src="road/utils/Logger.js"></script>
+    <script src="road/input/Keyboard.js"></script>
+    <script src="road/input/Mouse.js"></script>
+    <script src="road/Sound.js"></script>
+    <script src="road/3d/Entity.js"></script>
+
+    <script src="game/Block.js"></script>
+    <script src="game/Car.js"></script>
+
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      #viewport {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+
+    <script>
+    window.onload = function() {
+      Road.init({
+        road: {
+          domElement: document.getElementById('viewport')
+        },
+        logger: {
+          level: Road.Logger.DEBUG
+        },
+        renderer: {
+          antialias: false
+        },
+        camera: {
+          fov: 75,
+          near: 0.1,
+          far: 1000
+        }
+      });
+    }
+    </script>
+  </head>
+  <body>
+    <div id="viewport"></div>
+  </body>
+</html>
