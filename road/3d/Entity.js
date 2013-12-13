@@ -5,6 +5,16 @@ Road.Entity = function(parent) {
     get: function() { return this.mesh.position; },
     set: function(position) { this.mesh.position = position; }
   });
+
+  Object.defineProperty(this, 'rotation', {
+    get: function() { return this.mesh.rotation; },
+    set: function(rotation) { this.mesh.rotation = rotation; }
+  });
+
+  Object.defineProperty(this, 'scale', {
+    get: function() { return this.mesh.scale; },
+    set: function(scale) { this.mesh.scale = scale; }
+  })
 }
 
 Road.Entity.prototype.getParent = function() {

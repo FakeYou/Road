@@ -1,9 +1,15 @@
 Road = {}
 
+Road.onStarts = [];
+
+Road.gameStart = function() {}
+Road.gameUpdate = function() {}
+
 Road.init = function(params) {
   Road.logger = new Road.Logger(params.logger);
   Road.keyboard = new Road.Keyboard(params.keyboard);
   Road.mouse = new Road.Mouse(params.mouse);
+  Road.library = new Road.Library(params.library);
 
   Road.clock = new THREE.Clock();
 
@@ -34,48 +40,64 @@ Road.init = function(params) {
   Road.registerEvents();
   Road.handlers.windowResize();
 
-  Road.play = true;
+  Road.start();
+  Road.library.loadPreloads();
 
-  Road.populate();
+  Road.play = true;
+  Road.gameStarted = false;
 
   Road.update();
 }
 
-Road.populate = function() {
-  var ambient = new THREE.AmbientLight( 0x101030 );
-  Road.scene.add( ambient );
+Road.onStart = function(call) {
+  Road.onStarts.push(call);
+}
 
-  var directionalLight = new THREE.DirectionalLight( 0xffeedd );
-  directionalLight.position.set( 2, 1, -1 );
-  Road.scene.add( directionalLight );
+Road.start = function() {
+  console.log( Road.onStarts.length)
+  for(var i = 0; i < Road.onStarts.length; i++) {
+    var start = Road.onStarts[i];
 
-  Road.car = new Car(Road.scene);
-
-  Road.axis = new THREE.AxisHelper(64);
-  Road.scene.add(Road.axis);
+    start();
+  }
 }
 
 Road.update = function() {
   if(Road.play) {
     requestAnimationFrame(Road.update);
   }
+
   Road.frame += 1;
   Road.delta = Road.clock.getDelta();
-
-  Road.car.update(Road.delta);
 
   Road.keyboard.update(Road.delta);
   Road.mouse.update(Road.delta);
   Road.controls.update();
 
+  if(Road.gameStarted) {
+    Road.gameUpdate(Road.delta);
+  }
+
   Road.renderer.render(Road.scene, Road.camera);
 }
 
-Road.stop = function() {
+Road.setGameStart = function(object, method) {
+  Road.gameStart = function() {
+    method.call(object);
+  }
+}
+
+Road.setGameUpdate = function(object, method) {
+  Road.gameUpdate = function(delta) {
+    method.call(object, delta);
+  }
+}
+
+Road.pause = function() {
   Road.play = false;
 }
 
-Road.start = function() {
+Road.resume = function() {
   Road.play = true;
 
   requestAnimationFrame(Road.update);
